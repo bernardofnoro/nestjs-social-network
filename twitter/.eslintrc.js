@@ -9,13 +9,13 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
   ],
-  "exclude": [
-    "node_modules",
-    "test",
-    "dist",
-    "**/*spec.ts",
-    "tweets.ts", // exclude seed file
-    "prisma", // exclude prisma directory
+  exclude: [
+    'node_modules',
+    'test',
+    'dist',
+    '**/*spec.ts',
+    'tweets.ts', // exclude seed file
+    'prisma', // exclude prisma directory
   ],
   root: true,
   env: {
