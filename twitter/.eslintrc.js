@@ -15,8 +15,8 @@ module.exports = {
     "dist",
     "**/*spec.ts",
     "tweets.ts", // exclude seed file
-    "prisma" // exclude prisma directory
-  ]
+    "prisma", // exclude prisma directory
+  ],
   root: true,
   env: {
     node: true,
