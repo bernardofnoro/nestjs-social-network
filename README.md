@@ -129,7 +129,7 @@ Vamos aproveitar para fazer alguns ajustes no arquivo `.eslintrc.js`:
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'twitter/tsconfig.json', // corrigindo caminho para o projeto
+    project: 'twitter/tsconfig.json', // correcting path
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
@@ -137,14 +137,14 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
   ],
-  "exclude": [
-    "node_modules",
-    "test",
-    "dist",
-    "**/*spec.ts",
-    "tweets.ts", // excluindo arquivo de teste
-    "prisma" // excluindo diretório do prisma
-  ]
+  exclude: [
+    'node_modules',
+    'test',
+    'dist',
+    '**/*spec.ts',
+    'tweets.ts', // exclude seed file
+    'prisma', // exclude prisma directory
+  ],
   root: true,
   env: {
     node: true,
@@ -158,6 +158,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
   },
 };
+
 
 ```
 
