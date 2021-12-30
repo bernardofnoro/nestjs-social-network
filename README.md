@@ -3,15 +3,15 @@ Por <a href="https://www.linkedin.com/in/chanelym/">Chanely Marques</a> & <a hre
 
 ## Sobre
 
-:ballot_box_with_check: Configuração do Prisma com PostgreSQL
+:dart: Configuração do Prisma com PostgreSQL
 
-:ballot_box_with_check: Integração do Prisma com NetsJS
+:dart: Integração do Prisma com NetsJS
 
-:ballot_box_with_check: API REST com CRUD
+:dart: API REST com CRUD
 
-:ballot_box_with_check: Autenticação com JWT
+:dart: Autenticação com JWT
 
-:ballot_box_with_check: Manipulação de erros do Prisma utilizando os filtros de exceções do NestJS
+:dart: Manipulação de erros do Prisma utilizando os filtros de exceções do NestJS
 
 ## Nossas Ferramentas
 
@@ -35,7 +35,7 @@ Por <a href="https://www.linkedin.com/in/chanelym/">Chanely Marques</a> & <a hre
 
 [Documentação](https://www.postgresql.org/docs/14/release-14.html)
 
-## 01. NestJS
+## NestJS
 
 O NestJS é um framework utilizado na construção de aplicações _server-side_ em Node.js de forma eficiente e escalável, podendo utilizar o Express ou Fastify como servidores HTTP.
 
@@ -69,22 +69,22 @@ Sua arquitetura é muito inspirada na do Angular, contendo:
 
 ### Configurando o ambiente
 
-:ballot_box_with_check: Clone o repositório do seu projeto no GitHub
+ :smiley_cat: :pencil2: Clone o repositório do seu projeto no GitHub
 
-:ballot_box_with_check: Acesse a pasta clonada e instale a NestJS CLI
+ :smiley_cat: :pencil2: Acesse a pasta clonada e instale a NestJS CLI
 
 ```
 npm i -g @nestjs/cli
 ```
 
-:ballot_box_with_check: Crie a pasta para o projeto que vamos construir
+ :smiley_cat: :pencil2: Crie a pasta para o projeto que vamos construir
 
 ```bash
 nest new twitter
 cd twitter
 ```
 
-:bangbang: Caso encontre o erro `Failed to execute command: npm install --silent`, apague a pasta **twitter** e execute a sequência de comandos abaixo:
+> **_Nota_** :bangbang: Caso encontre o erro `Failed to execute command: npm install --silent`, apague a pasta **twitter** e execute a sequência de comandos abaixo:
 
 ```bash
 npm cache clean --force
@@ -93,7 +93,7 @@ npm i -g @nestjs/cli
 nest new twitter
 ```
 
-:ballot_box_with_check: Instale e configure o _Swagger_:
+ :smiley_cat: :pencil2: Instale e configure o _Swagger_:
 
 ```bash
 npm i @nestjs/swagger class-transformer class-validator swagger-ui-express
@@ -125,7 +125,7 @@ bootstrap();
 
 Vamos aproveitar para fazer alguns ajustes no arquivo `.eslintrc.js`:
 
-```json
+```javascript
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -168,17 +168,43 @@ Podemos iniciar nossa API com o comando `npm run start:dev` para testar o _swagg
 
 ![figura_01](twitter/misc/images/figura_01.png)
 
-## 02. Configuração do Prisma com PostgreSQL
+## Configuração do Prisma com PostgreSQL
+
+Agora que colocamos parte do ambiente em ordem e instalamos as dependência, precisamos adicionar o Prisma ao projeto instalando-o como dependência de desenvolvimento, inicializar o _schema_ e instalar a `@prisma/client`.
+
+```bash
+npm install prisma --save-dev
+npx prisma init --datasource-provider postgresql
+
+npm install @prisma/client
+```
+
+Quando utilizamos o parâmetro `init` para o Prisma, estamos criando um diretório chamado **prisma** contendo o arquivo `schema.prisma` que é fundamental para o seu funcionamento:
+
+```javascript
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+```
 
 
 
-## 03. REST API
+## REST API
 
 
 
-## 04. Manipulação de Erros
+## Manipulação de Erros
 
 
 
-## 05. Autenticação
+## Autenticação
 
