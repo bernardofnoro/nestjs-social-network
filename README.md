@@ -199,60 +199,41 @@ datasource db {
 Precisamos criar um modelo para o nosso banco de dados onde representaremos nossas tabelas. Como estamos construindo uma API que servirá dados de uma rede social, faremos uma representação para o _Twitter_ como exemplo:
 
 ```typescript
-model User {
-  Id          Int    @id   @default(autoincrement())
-  name        String
-  surname     String
-  username    String    @unique
-  password    String
-  about       String
-  birthday    String
-  people      People[]
-  tweet       Tweet[]
-  favoriteTweet favoriteTweet[]
-  createdAt   DateTime  @default(now()) @map("created_at")
-}
-
 model Tweet {
-  Id          Int    @id   @default(autoincrement())
-  content     String
-  likes       Int
-  userId      Int
-  user        User[]    @relation(fields: [userId], references: [Id])
-  favoriteTweet favoriteTweet[]
-  createdAt   DateTime  @default(now()) @map("created_at")
-}
-model People {
-  Id          Int      @id   @default(autoincrement())
-  userId      Int
-  user        User[]      @relation(fields: [userId], references: [Id])
-  followerId  Int
-  follower    Follower[]  @relation(fields: [followerId], references: [Id])
-  followingId  Int
-  following    Following[]  @relation(fields: [followingId], references: [Id])
-  createdAt   DateTime    @default(now()) @map("created_at")
-}
-
-model Follower {
-  Id          Int    @id   @default(autoincrement())
-  follower    String
-  People      People[]
-  createdAt   DateTime  @default(now()) @map("created_at")
-}
-model Following {
-  Id          Int    @id   @default(autoincrement())
-  followee    String
-  People      People[]
+  id          Int       @id   @default(autoincrement())
+  content     String    @db.VarChar(140)
+  categories  CategoriesOnTweets[]
+  user        User[]
   createdAt   DateTime  @default(now()) @map("created_at")
 }
 
-model favoriteTweet {
-  Id          Int    @id   @default(autoincrement())
-  userId      Int
-  user        User[]      @relation(fields: [userId], references: [Id])
-  tweetId      Int
-  tweet        Tweet[]      @relation(fields: [tweetId], references: [Id])
-  createdAt   DateTime  @default(now()) @map("created_at")
+model Category {
+  id    Int                 @id @default(autoincrement())
+  name  String
+  tweets CategoriesOnTweets[]
+}
+
+model CategoriesOnTweets {
+  tweet       Tweet     @relation(fields: [tweetId], references: [id])
+  tweetId     Int 
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  Int 
+  assignedAt  DateTime @default(now())
+  assignedBy  String
+
+  @@id([tweetId, categoryId])
+}
+
+model User {
+  id              Int       @id   @default(autoincrement())
+  name            String
+  lastname        String
+  username        String    @unique
+  password        String
+  about           String
+  birthday        String
+  tweet           Tweet[]
+  createdAt       DateTime  @default(now()) @map("created_at")
 }
 ```
 
