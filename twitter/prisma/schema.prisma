@@ -10,48 +10,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Follower {
-  Id          Int         @id   @default(autoincrement())
-  follower    String
-  totFollower Int         @default(autoincrement())
-  userId      Int
-  user        User[]      @relation(fields: [userId], references: [Id])
-  followingId Int
-  following   Following[] @relation(fields: [followingId], references: [Id])
-  createdAt   DateTime    @default(now()) @map("created_at")
-}
-
-model Following {
-  Id            Int         @id   @default(autoincrement())
-  following     String
-  totFollowing  Int         @default(autoincrement())
-  userId        Int
-  user          User[]      @relation(fields: [userId], references: [Id])
-  followerId    Int
-  follower      Follower[]  @relation(fields: [followerId], references: [Id])
-  createdAt     DateTime    @default(now()) @map("created_at")
-}
-
 model Tweet {
-  Id          Int       @id   @default(autoincrement())
-  content     String    @db.VarChar(140)
-  likes       Int       @default(autoincrement())
-  favorite    Boolean
-  userId      Int
-  user        User[]    @relation(fields: [userId], references: [Id])
-  createdAt   DateTime  @default(now()) @map("created_at")
+  id         Int                  @id @default(autoincrement())
+  content    String               @db.VarChar(140)
+  categories CategoriesOnTweets[]
+  user       User[]
+  createdAt  DateTime             @default(now()) @map("created_at")
+}
+
+model Category {
+  id     Int                      @id @default(autoincrement())
+  name   String
+  tweet CategoriesOnTweets[]
+}
+
+model CategoriesOnTweets {
+  tweet      Tweet    @relation(fields: [tweetId], references: [id])
+  tweetId    Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  assignedAt DateTime @default(now())
+  assignedBy String
+
+  @@id([tweetId, categoryId])
 }
 
 model User {
-  Id              Int       @id   @default(autoincrement())
-  name            String
-  lastname        String
-  username        String    @unique
-  password        String
-  about           String
-  birthday        String
-  tweet           Tweet[]
-  follower        Follower[]
-  following       Following[]
-  createdAt       DateTime  @default(now()) @map("created_at")
+  id        Int      @id @default(autoincrement())
+  name      String
+  lastname  String
+  username  String   @unique
+  password  String
+  about     String
+  birthday  String
+  tweet     Tweet[]
+  createdAt DateTime @default(now()) @map("created_at")
 }
