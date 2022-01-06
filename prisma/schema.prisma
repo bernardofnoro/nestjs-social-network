@@ -11,33 +11,33 @@ model Tweet {
   id            Int                  @id @default(autoincrement())
   content       String               @db.VarChar(140)
   userid        Int
+  createdAt     DateTime             @default(now()) @map("created_at")
   user          User                 @relation(fields: [userid], references: [id])
   categories    CategoriesOnTweets[]
   favoriteTweet FavoriteTweet[]
-  createdAt     DateTime             @default(now()) @map("created_at")
 }
 
 model Category {
   id        Int                  @id @default(autoincrement())
   name      String
-  tweet     CategoriesOnTweets[]
   createdAt DateTime             @default(now()) @map("created_at")
+  tweet     CategoriesOnTweets[]
 }
 
 model Follower {
   id        Int      @id @default(autoincrement())
   name      String
   userid    Int
-  user      User     @relation(fields: [userid], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userid], references: [id])
 }
 
 model Following {
   id        Int      @id @default(autoincrement())
   name      String
   userid    Int
-  user      User     @relation(fields: [userid], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userid], references: [id])
 }
 
 model User {
@@ -48,31 +48,31 @@ model User {
   password      String
   about         String
   birthday      String
-  tweet         Tweet[]
+  createdAt     DateTime        @default(now()) @map("created_at")
+  favoriteTweet FavoriteTweet[]
   follower      Follower[]
   following     Following[]
-  favoriteTweet FavoriteTweet[]
-  createdAt     DateTime        @default(now()) @map("created_at")
+  tweet         Tweet[]
 }
 
 model CategoriesOnTweets {
-  tweet      Tweet    @relation(fields: [tweetid], references: [id])
   tweetid    Int
-  category   Category @relation(fields: [categoryid], references: [id])
   categoryid Int
   assignedAt DateTime @default(now())
   assignedBy String
+  category   Category @relation(fields: [categoryid], references: [id])
+  tweet      Tweet    @relation(fields: [tweetid], references: [id])
 
   @@id([tweetid, categoryid])
 }
 
 model FavoriteTweet {
   tweetid    Int
-  tweet      Tweet    @relation(fields: [tweetid], references: [id])
   userid     Int
-  user       User     @relation(fields: [userid], references: [id])
   assignedAt DateTime @default(now())
   assignedBy String
+  tweet      Tweet    @relation(fields: [tweetid], references: [id])
+  user       User     @relation(fields: [userid], references: [id])
 
   @@id([tweetid, userid])
 }

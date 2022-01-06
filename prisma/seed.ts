@@ -10,13 +10,13 @@ const tweets: any = [
 ];
 
 async function main() { 
-  for (const foo of tweets) {
-    const createTweet = prisma.tweet.create({
+  // for (const foo of tweets) {
+    const createCategory = prisma.category.create({
       data: {
-        content: foo,
+        name: "backend",
       },
     });
-  }
+  // }
 }
 
 main()
