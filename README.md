@@ -166,13 +166,43 @@ Podemos iniciar nossa API com o comando `npm run start:dev` para testar o _swagg
 
 - `localhost:3000/api/v1/doc`
 
-![figura_01](twitter/misc/images/figura_01.png)
+![figura_01](misc/images/figura_01.png)
 
 ### Criando um banco de dados no Heroku
 
+Caso você não tenha o **PostgreSQL** instalado localmente ou não queira instalá-lo, o _Heroku_ é uma opção para persistirmos dados.
+
+Faça _Login_ na sua conta do **_Heroku_** e clique no botão para a criação de uma nova app:
+
+![figura_01](misc/images/figura_10.png)
+
+Coloque o nome que fizer sentido pra você e clique em **_Create app_**. 
+
+Com nossa _app_ criada, precisamos agora criar o Banco de Dados e fazemos isso clicando no botão de opções e selecionando  **_Data_**:
+
+![figura_01](misc/images/figura_07.png)
+
+Escolha a opção **_Heroku Postgres_**:
+
+![figura_01](misc/images/figura_08.png)
+
+Aperte o botão de **_Install Heroku Postgres_**:
+
+![figura_01](misc/images/figura_09.png)
+
+Adicione o nome de sua _app_ e mantenha o plano **_Hobby Dev - Free_** e clique em **_Submit Order Form_**:
+
+![figura_01](misc/images/figura_11.png)
+
+Com o banco de dados criado, clique em **_Heroku Postgres_**. Na tela aberta selecione a opção **_Settings_** e em seguida, **_View Credentials_**:
+
+![figura_01](misc/images/figura_12.png)
+
+Usaremos estas informações para configurar o arquivo **.env** que auxiliará na conexão com o banco. Falaremos sobre a configuração deste arquivo daqui a pouco.
+
 ## Configuração do Prisma com PostgreSQL
 
-Agora que colocamos parte do ambiente em ordem e instalamos as dependência, precisamos adicionar o Prisma ao projeto instalando-o como dependência de desenvolvimento, inicializar o _schema_ e instalar a `@prisma/client`.
+Agora que colocamos parte do ambiente em ordem e instalamos o que precisamos até aqui, precisamos adicionar o Prisma ao projeto instalando-o como dependência de desenvolvimento, inicializar o _schema_ e instalar a `@prisma/client`.
 
 ```bash
 npm install prisma --save-dev
@@ -184,9 +214,6 @@ npm install @prisma/client
 Quando utilizamos o parâmetro `init` para o Prisma, estamos criando um diretório chamado **prisma** contendo o arquivo `schema.prisma` que é fundamental para o seu funcionamento:
 
 ```javascript
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -198,12 +225,19 @@ datasource db {
 
 ```
 
+Além do diretório acima, ` prisma init` também cria o arquivo `.env` que nos auxilia a customizar variáveis de ambiente para usarmos em todo o projeto. Desta forma, podemos ocultar informações sensíveis como usuário e senha.
+
+Seu arquivo deve estar configurado desta forma:
+
+```javascript
+DATABASE_URL="postgresql://NOME_USUARIO_HEROKU:SENHA_USUARIO_HEROKU@NOME_HOST_HEROKU:5432/NOME_BANCO_HEROKU"
+```
+
+> **_Dica_**: na página de configurações do _Heroku_, uma **URI** completa e correta nos é fornecida. Você pode colocar seu conteúdo entre as aspas no `.env`.
+
 Precisamos criar um modelo para o nosso banco de dados onde representaremos nossas tabelas. Como estamos construindo uma API que servirá dados de uma rede social, faremos uma representação para o _Twitter_ como exemplo:
 
 ```typescript
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
