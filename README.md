@@ -67,7 +67,7 @@ Sua arquitetura é muito inspirada na do Angular, contendo:
   nest generate service
   ```
 
-### Configurando o ambiente
+### Configurando o ambiente local
 
  :smiley_cat: :pencil2: Clone o repositório do seu projeto no GitHub
 
@@ -168,6 +168,8 @@ Podemos iniciar nossa API com o comando `npm run start:dev` para testar o _swagg
 
 ![figura_01](twitter/misc/images/figura_01.png)
 
+### Criando um banco de dados no Heroku
+
 ## Configuração do Prisma com PostgreSQL
 
 Agora que colocamos parte do ambiente em ordem e instalamos as dependência, precisamos adicionar o Prisma ao projeto instalando-o como dependência de desenvolvimento, inicializar o _schema_ e instalar a `@prisma/client`.
@@ -199,42 +201,88 @@ datasource db {
 Precisamos criar um modelo para o nosso banco de dados onde representaremos nossas tabelas. Como estamos construindo uma API que servirá dados de uma rede social, faremos uma representação para o _Twitter_ como exemplo:
 
 ```typescript
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 model Tweet {
-  id          Int       @id   @default(autoincrement())
-  content     String    @db.VarChar(140)
-  categories  CategoriesOnTweets[]
-  user        User[]
-  createdAt   DateTime  @default(now()) @map("created_at")
+  id            Int                  @id @default(autoincrement())
+  content       String               @db.VarChar(140)
+  userId        Int
+  user          User                 @relation(fields: [userId], references: [id])
+  categories    CategoriesOnTweets[]
+  favoriteTweet FavoriteTweet[]
+  createdAt     DateTime             @default(now()) @map("created_at")
 }
 
 model Category {
-  id    Int                 @id @default(autoincrement())
-  name  String
-  tweets CategoriesOnTweets[]
+  id        Int                  @id @default(autoincrement())
+  name      String
+  tweet     CategoriesOnTweets[]
+  createdAt DateTime             @default(now()) @map("created_at")
+}
+
+model Follower {
+  id        Int      @id @default(autoincrement())
+  name      String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+}
+
+model Following {
+  id        Int      @id @default(autoincrement())
+  name      String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+}
+
+model User {
+  id            Int             @id @default(autoincrement())
+  name          String
+  lastname      String
+  username      String          @unique
+  password      String
+  about         String
+  birthday      String
+  tweet         Tweet[]
+  follower      Follower[]
+  following     Following[]
+  favoriteTweet FavoriteTweet[]
+  createdAt     DateTime        @default(now()) @map("created_at")
 }
 
 model CategoriesOnTweets {
-  tweet       Tweet     @relation(fields: [tweetId], references: [id])
-  tweetId     Int 
-  category    Category @relation(fields: [categoryId], references: [id])
-  categoryId  Int 
-  assignedAt  DateTime @default(now())
-  assignedBy  String
+  tweet      Tweet    @relation(fields: [tweetId], references: [id])
+  tweetId    Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  assignedAt DateTime @default(now())
+  assignedBy String
 
   @@id([tweetId, categoryId])
 }
 
-model User {
-  id              Int       @id   @default(autoincrement())
-  name            String
-  lastname        String
-  username        String    @unique
-  password        String
-  about           String
-  birthday        String
-  tweet           Tweet[]
-  createdAt       DateTime  @default(now()) @map("created_at")
+model FavoriteTweet {
+  tweetid    Int
+  tweet      Tweet    @relation(fields: [tweetid], references: [id])
+  userid     Int
+  user       User     @relation(fields: [userid], references: [id])
+  assignedAt DateTime @default(now())
+  assignedBy String
+
+  @@id([tweetid, userid])
 }
+
 ```
 
 
