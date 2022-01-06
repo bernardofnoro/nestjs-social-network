@@ -10,10 +10,10 @@ const tweets: any = [
 ];
 
 async function main() { 
-  for (const tweet of tweets) {
+  for (const foo of tweets) {
     const createTweet = prisma.tweet.create({
       data: {
-        content: tweet,
+        content: foo,
       },
     });
   }
@@ -26,4 +26,4 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect()
-  })
+});
