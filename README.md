@@ -194,11 +194,13 @@ Adicione o nome de sua _app_ e mantenha o plano **_Hobby Dev - Free_** e clique 
 
 ![figura_01](misc/images/figura_11.png)
 
-Com o banco de dados criado, clique em **_Heroku Postgres_**. Na tela aberta selecione a opção **_Settings_** e em seguida, **_View Credentials_**:
+Com o banco de dados criado, clique em **_Heroku Postgres_**. Na tela seguinte selecione a opção **_Settings_** e em seguida, **_View Credentials_**:
 
 ![figura_01](misc/images/figura_12.png)
 
-Usaremos estas informações para configurar o arquivo **.env** que auxiliará na conexão com o banco. Falaremos sobre a configuração deste arquivo daqui a pouco.
+Usaremos estas informações de credenciais para configurar o arquivo **.env** que auxiliará na conexão com o banco. Falaremos sobre ele daqui a pouco.
+
+![figura_01](misc/images/figura_13.png)
 
 ## Configuração do Prisma com PostgreSQL
 
@@ -230,12 +232,16 @@ Além do diretório acima, ` prisma init` também cria o arquivo `.env` que nos 
 Seu arquivo deve estar configurado desta forma:
 
 ```javascript
-DATABASE_URL="postgresql://NOME_USUARIO_HEROKU:SENHA_USUARIO_HEROKU@NOME_HOST_HEROKU:5432/NOME_BANCO_HEROKU"
+DATABASE_URL="postgres://bzcjdnejndbctt:fd220924131b8a284504c3e1333860f1710b027e255fed3ae9bb531ba674ccaf@ec2-18-235-86-66.compute-1.amazonaws.com:5432/dcs315rnonib8o"
 ```
+
+Onde: DATABASE_URL="postgresql://**NOME_USUARIO**:**SENHA_USUARIO**@**NOME_HOST**:5432/**NOME_DO_BANCO**"
 
 > **_Dica_**: na página de configurações do _Heroku_, uma **URI** completa e correta nos é fornecida. Você pode colocar seu conteúdo entre as aspas no `.env`.
 
-Precisamos criar um modelo para o nosso banco de dados onde representaremos nossas tabelas. Como estamos construindo uma API que servirá dados de uma rede social, faremos uma representação para o _Twitter_ como exemplo:
+> **_IMPORTANTÍSSIMO_** :bangbang: :bangbang: NUNCA, JAMAIS, EVER deixe seu arquivo `.env` exposto nas internetz. **SEMPRE** cheque se ele está na lista de arquivos do `.gitignore`. Como estamos utilizando este repositório para fins didáticos, abrimos uma exceção.
+
+Precisamos criar um modelo para o nosso banco de dados onde nossas tabelas serão representadas. Como estamos construindo uma API que servirá dados de uma rede social, faremos uma representação para o _Twitter_ como exemplo:
 
 ```typescript
 generator client {
