@@ -174,33 +174,33 @@ Caso você não tenha o **PostgreSQL** instalado localmente ou não queira insta
 
 Faça _Login_ na sua conta do **_Heroku_** e clique no botão para a criação de uma nova app:
 
-![figura_01](misc/images/figura_10.png)
+![figura_10](misc/images/figura_10.png)
 
 Coloque o nome que fizer sentido pra você e clique em **_Create app_**. 
 
 Com nossa _app_ criada, precisamos agora criar o Banco de Dados e fazemos isso clicando no botão de opções e selecionando  **_Data_**:
 
-![figura_01](misc/images/figura_07.png)
+![figura_07](misc/images/figura_07.png)
 
 Escolha a opção **_Heroku Postgres_**:
 
-![figura_01](misc/images/figura_08.png)
+![figura_08](misc/images/figura_08.png)
 
 Aperte o botão de **_Install Heroku Postgres_**:
 
-![figura_01](misc/images/figura_09.png)
+![figura_09](misc/images/figura_09.png)
 
 Adicione o nome de sua _app_ e mantenha o plano **_Hobby Dev - Free_** e clique em **_Submit Order Form_**:
 
-![figura_01](misc/images/figura_11.png)
+![figura_11](misc/images/figura_11.png)
 
 Com o banco de dados criado, clique em **_Heroku Postgres_**. Na tela seguinte selecione a opção **_Settings_** e em seguida, **_View Credentials_**:
 
-![figura_01](misc/images/figura_12.png)
+![figura_12](misc/images/figura_12.png)
 
 Usaremos estas informações de credenciais para configurar o arquivo **.env** que auxiliará na conexão com o banco. Falaremos sobre ele daqui a pouco.
 
-![figura_01](misc/images/figura_13.png)
+![figura_13](misc/images/figura_13.png)
 
 ## Configuração do Prisma com PostgreSQL
 
@@ -256,8 +256,8 @@ datasource db {
 model Tweet {
   id            Int                  @id @default(autoincrement())
   content       String               @db.VarChar(140)
-  userId        Int
-  user          User                 @relation(fields: [userId], references: [id])
+  userid        Int
+  user          User                 @relation(fields: [userid], references: [id])
   categories    CategoriesOnTweets[]
   favoriteTweet FavoriteTweet[]
   createdAt     DateTime             @default(now()) @map("created_at")
@@ -273,16 +273,16 @@ model Category {
 model Follower {
   id        Int      @id @default(autoincrement())
   name      String
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  userid    Int
+  user      User     @relation(fields: [userid], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
 }
 
 model Following {
   id        Int      @id @default(autoincrement())
   name      String
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  userid    Int
+  user      User     @relation(fields: [userid], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
 }
 
@@ -302,14 +302,14 @@ model User {
 }
 
 model CategoriesOnTweets {
-  tweet      Tweet    @relation(fields: [tweetId], references: [id])
-  tweetId    Int
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId Int
+  tweet      Tweet    @relation(fields: [tweetid], references: [id])
+  tweetid    Int
+  category   Category @relation(fields: [categoryid], references: [id])
+  categoryid Int
   assignedAt DateTime @default(now())
   assignedBy String
 
-  @@id([tweetId, categoryId])
+  @@id([tweetid, categoryid])
 }
 
 model FavoriteTweet {
@@ -325,7 +325,115 @@ model FavoriteTweet {
 
 ```
 
+Para um melhor entendimento, podemos visualizar este `schema.prisma` da seguinte forma:
 
+![db_final_diagram](misc/images/db_final_diagram.png)
+
+**Conexões One To Many**: 
+
+- Tabela Tweet
+
+  - **id**: Primary Key
+
+  - **content**: String
+
+  - **categoryid**: Foreign Key
+
+  - **userid**: Foreign Key
+
+  - **created_at**: Data de Criação
+
+
+
+- Tabela Category 
+
+  - **id**: Primary Key
+
+  - **name**: String
+
+  - **created_at**: Data de Criação
+
+
+
+- Tabela Follower
+
+  - **id**: Primary Key
+
+  - **follower**: String
+
+  - **created_at**: Data de Criação
+
+
+
+- Tabela Following
+
+  - **id**: Primary Key
+
+  - **follower**: String
+
+  - **created_at**: Data de Criação
+
+
+
+- Tabela User 
+
+  - **id**: Primary Key
+
+  - **name**: String	
+
+  - **lastname**: String
+
+  - **username**: String e não se repete
+
+  - **password**: String
+
+  - **about**: String
+
+  - **birthday**: String
+
+  - **tweetid**: Foreign Key
+
+  - **followerid**: Foreign Key
+
+  - **followingid**: Foreign Key
+
+  - **created_at**: Data de Criação
+
+
+
+**Conexões Many To Many**:
+
+- Tabela CategoriesOnTweets
+
+  - **categoryid**: Foreign Key
+
+  - **tweetid**: Foreign Key
+
+  - **assignedAt**: Quando a categoria foi atribuída
+
+  - **created_at**: Data de Criação
+
+
+
+- Tabela FavoritesOnUser
+
+  - **userid**: Foreign Key
+
+  - **tweetid**: Foreign Key
+
+
+
+Agora que temos nosso modelo criado, vamos sincronizar nosso Prisma _schema_ com o _schema_ do banco de dados utilizando o comando:
+
+```bash
+npx prisma db push
+```
+
+> :smiley_cat: :pencil2: **_Nota_**: Sugerimos fortemente que você estude a diferença entre **Prisma Migrate** e **db push**, dado que ambas funções são usadas para casos específicos dependendo do ambiente de banco de dados que tenha em mãos.
+
+![figura_02](misc/images/figura_02.png)
+
+Vamos checar se tudo foi criado como deveria? Abra seu **psql** e informe as credenciais de acesso ao banco no _Heroku_:
 
 ## REST API
 

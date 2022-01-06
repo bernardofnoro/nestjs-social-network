@@ -10,8 +10,8 @@ datasource db {
 model Tweet {
   id            Int                  @id @default(autoincrement())
   content       String               @db.VarChar(140)
-  userId        Int
-  user          User                 @relation(fields: [userId], references: [id])
+  userid        Int
+  user          User                 @relation(fields: [userid], references: [id])
   categories    CategoriesOnTweets[]
   favoriteTweet FavoriteTweet[]
   createdAt     DateTime             @default(now()) @map("created_at")
@@ -27,16 +27,16 @@ model Category {
 model Follower {
   id        Int      @id @default(autoincrement())
   name      String
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  userid    Int
+  user      User     @relation(fields: [userid], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
 }
 
 model Following {
   id        Int      @id @default(autoincrement())
   name      String
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  userid    Int
+  user      User     @relation(fields: [userid], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
 }
 
@@ -56,14 +56,14 @@ model User {
 }
 
 model CategoriesOnTweets {
-  tweet      Tweet    @relation(fields: [tweetId], references: [id])
-  tweetId    Int
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId Int
+  tweet      Tweet    @relation(fields: [tweetid], references: [id])
+  tweetid    Int
+  category   Category @relation(fields: [categoryid], references: [id])
+  categoryid Int
   assignedAt DateTime @default(now())
   assignedBy String
 
-  @@id([tweetId, categoryId])
+  @@id([tweetid, categoryid])
 }
 
 model FavoriteTweet {
