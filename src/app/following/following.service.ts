@@ -1,26 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFollowingDto } from './dto/create-following.dto';
 import { UpdateFollowingDto } from './dto/update-following.dto';
+import { Following } from '@prisma/client';
+import { PrismaService } from 'src/shared/database/database.service';
 
 @Injectable()
 export class FollowingService {
-  create(createFollowingDto: CreateFollowingDto) {
-    return 'This action adds a new following';
+  constructor(private prisma: PrismaService) {}
+
+
+  async create(createFollowingDto: CreateFollowingDto): Promise<Following> {
+    return await this.prisma.following.create({
+      data: {...createFollowingDto},
+    });
   }
 
-  findAll() {
-    return `This action returns all following`;
+  async findAll() : Promise<Following[]> {
+    return await this.prisma.following.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} following`;
+  async findOne(id: number): Promise<Following> {
+    return await this.prisma.following.findUnique({ where: { id }});
+  };
+
+  async update(id: number,
+     updateFollowingDto: UpdateFollowingDto): Promise<Following> {
+    return await this.prisma.following.update({
+      data: {...updateFollowingDto},
+      where: { id },
+    });
   }
 
-  update(id: number, updateFollowingDto: UpdateFollowingDto) {
-    return `This action updates a #${id} following`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} following`;
+  async remove(id: number) {
+    return await this.prisma.following.delete({where: { id }});
   }
 }
