@@ -433,7 +433,46 @@ npx prisma db push
 
 ![figura_02](misc/images/figura_02.png)
 
-Vamos checar se tudo foi criado como deveria? Abra seu **psql** e informe as credenciais de acesso ao banco no _Heroku_:
+Vamos checar se tudo foi criado como deveria? Abra seu **psql** e informe as credenciais de acesso ao banco no _Heroku_. 
+
+Ao logar no sistema, digite o comando: `\c dcs315rnonib8o` para se conectar ao seu banco de dados. Substitua **dcs315rnonib8o** pelo nome do seu banco.
+
+Em seguida, digite o comando `\dt` para listar as tabelas criadas:
+
+![figura_03](misc/images/figura_03.png)
+
+Exatamente como configuramos em nosso _Schema_. Se você chegou até aqui, parabéns! :rainbow::rainbow::rainbow::rainbow::rainbow::rainbow:
+
+Com o banco pronto para receber nossos dados, vamos adicionar alguns nas tabelas **Category** e **User** utilizando uma função do _Prisma Client_ chamada **_seed_**. 
+
+Antes, vamos preparar nosso ambiente para a correta execução do _seed_, que é um arquivo que obrigatoriamente precisa ser chamado de **seed.ts** e deve estar dentro da pasta **prisma**.
+
+Para funcionar corretamente, adicione as seguintes linhas ao final do seu `package.json`:
+
+```json
+  "prisma": {
+    "seed": "ts-node seed.ts"
+  }
+```
+
+E execute a instalação abaixo em seu terminal:
+
+```bash
+npm install -D typescript ts-node @types/node
+```
+
+O arquivo **seed.ts** necessita de algumas partes para rodar de forma adequada:
+
+- Importar e instanciar o **PrismaClient**
+- Conter os dados que serão importados para o banco
+- Função **async**
+- Laço **for** iterando os dados que serão importados
+- Captura e registro de erros da função _async_
+
+```typescript
+```
+
+
 
 ## REST API
 
