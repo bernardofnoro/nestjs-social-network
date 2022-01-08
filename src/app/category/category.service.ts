@@ -10,7 +10,7 @@ export class CategoryService {
   constructor(private prisma : PrismaService) {}
 
 
-  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+  async create(createCategoryDto:CreateCategoryDto): Promise<Category> {
     return await this.prisma.category.create({
       data: {...CreateCategoryDto},
     });
