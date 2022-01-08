@@ -13,11 +13,13 @@ import { UserController } from './app/user/user.controller';
 import { UserModule } from './app/user/user.module';
 import { UserService } from './app/user/user.service';
 import { DatabaseModule } from './shared/database/database.module';
+import { AuthModule } from './core/auth/auth.module';
 
 
 @Module({
-  imports: [DatabaseModule,UserModule],
+  imports: [DatabaseModule,UserModule, AuthModule],
   controllers: [AppController, CategoryController,FollowerController,FollowingController,TweetController,UserController],
   providers: [AppService,CategoryService,FollowerService,FollowingService,TweetService,UserService],
 })
+
 export class AppModule {}

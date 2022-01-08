@@ -657,11 +657,91 @@ npx prisma studio
 
 Se você chegou até aqui, parabéns! :rainbow::rainbow::rainbow::rainbow::rainbow::rainbow:
 
-Dentro da pasta `src` crie a pasta `app`. 
+Dentro da pasta `src` crie a pasta `app` e a pasta `shared`, pois dentro delas iremos criar as pastas contendo os serviços que vamos disponibilizar em nossa API.
 
-## REST API
+Precisamos integrar o serviço do _Prisma_ à arquitetura do projeto para conseguirmos persistir dados no banco através de nossos _Endpoints_. Com a CLI, vamos gerar um **modulo** e um **serviço**, ambos chamados **database** e colocá-los dentro da pasta **shared**:
 
+``` bash
+nest g mo shared/database
+nest g s shared/database
+```
 
+Quando criamos um módulo no _Nest_, tudo o que disponibilizamos **para** e **daquele** módulo precisa ser **importado** e/ou **exportado** para estar acessível aos outros módulos e se feito em `app.module.ts`, em toda a aplicação.
+
+Falando de serviços, nós temos acesso a eles através de uma prática chamada de **Injeção de Dependência**, responsável por instanciar a classe criada no arquivo de serviço e disponibilizar os métodos para serem utilizados onde o injetarmos.
+
+Como criamos um serviço específico para usar o _Prisma_ nos outros módulos, precisamos configurá-lo usando o **decorator** `@Global` , exportá-lo corretamente e importar no `app.module.ts`, nos possibilitando sua injeção em qualquer lugar da API.
+
+No arquivo `src/shared/database/database.module.ts`:
+
+```typescript
+import { Module, Global } from '@nestjs/common';
+import { PrismaService } from './database.service';
+
+@Global() // Disponibilizando o DatabaseModule globalmente
+@Module({
+  providers: [
+    PrismaService,
+  ],
+  exports: [
+    PrismaService, // Exportando o serviço do Prisma no DatabaseModule
+  ]
+})
+export class DatabaseModule {}
+
+```
+
+No arquivo `database.service.ts` precisamos estender o **PrismaService** com o **PrismaClient** para que ele também seja instanciado: 
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+
+@Injectable()
+export class PrismaService extends PrismaClient {
+  constructor() {
+    super();
+  }
+}
+
+```
+
+Checando o `app.module` se nosso serviço foi corretamente importado:
+
+```typescript
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { DatabaseModule } from './shared/database/database.module'; // Arquivo importado
+
+@Module({
+  imports: [
+    DatabaseModule, // Módulo importado e disponível por toda a aplicação
+  ],
+  controllers: [
+    AppController
+  ],
+  providers: [
+    AppService
+  ],
+})
+export class AppModule {}
+
+```
+
+## Criando Nossa API com Persistência de Dados
+
+Vamos começar a implementar as operações **REST CRUD** em nossa API de acordo com o que definimos no _schema_. Para começar, vamos gerar os _resources_ com a CLI:
+
+```bash
+nest g resource app/category
+nest g resource app/follower
+nest g resource app/following
+nest g resource app/tweet
+nest g resource app/user
+```
+
+Cada um destes _generates_ cria arquivos pré-preparados com códigos dentro que podemos modificar e ajustar para as nossas necessidades.
 
 ## Manipulação de Erros
 

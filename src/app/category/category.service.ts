@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { PrismaService } from 'src/shared/database/database.service';
+import { PrismaService } from '../../shared/database/database.service';
 import { Category } from '@prisma/client';
-
 
 @Injectable()
 export class CategoryService {
   constructor(private prisma : PrismaService) {}
+
+
+
 
 
   async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
