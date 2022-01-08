@@ -14,8 +14,4 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get('')
-  findTweets() {
-    return this.prisma.tweet.findMany();
-  }
 }
