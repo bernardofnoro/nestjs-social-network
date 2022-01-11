@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { TweetService } from './tweet.service';
 import { CreateTweetDto } from './dto/create-tweet.dto';
 import { UpdateTweetDto } from './dto/update-tweet.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('tweet')
 @Controller('tweet')
 export class TweetController {
   constructor(private readonly tweetService: TweetService) {}

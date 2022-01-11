@@ -733,6 +733,8 @@ export class AppModule {}
 
 Vamos começar a implementar as operações **REST CRUD** em nossa API de acordo com o que definimos no _schema_. Para começar, vamos gerar os _resources_ com a CLI:
 
+> **_Nota_** :bangbang: O processo que executaremos daqui pra frente se aplicará para todos os _resources_.
+
 ```bash
 nest g resource app/category
 nest g resource app/follower
@@ -741,7 +743,67 @@ nest g resource app/tweet
 nest g resource app/user
 ```
 
-Cada um destes _generates_ cria arquivos pré-preparados com códigos dentro que podemos modificar e ajustar para as nossas necessidades.
+Cada um destes _generates_ cria arquivos pré-preparados com parte do código necessário para o correto funcionamento do NestJS e que pode ser modificado. 
+Vamos começar por agrupar todos os nosso _endpoints_ utilizando o _decorator_ `@ApiTags('products')`, importando-o de `@nestjs/swagger`.
+
+```typescript
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger'; // Importando API tags
+
+import { CategoryService } from './category.service';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
+
+@ApiTags('category') // 
+@Controller('category')
+export class CategoryController {
+  constructor(private readonly categoryService: CategoryService) {}
+  
+  // CRUD Operations
+}
+```
+
+Desta forma, quando acessarmos nossas rotas pelo _Swagger_, as que são pertinentes à _category_ estarão organizadas debaixo desta _tag_.
+
+Vamos entender o que está acontecendo no arquivo **category.service.ts**. Podemos notar que automaticamente o NestJS providenciou a injeção do _Prisma_ no serviço _category_. 
+
+```typescript
+@Injectable()
+export class CategoryService {
+  constructor(private prisma : PrismaService) {}
+```
+
+Desta forma, nos permitindo implementar as operações que faremos com e/no banco de dados:
+
+```typescript
+  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+    return await this.prisma.category.create(
+      { data: createCategoryDto }
+    );
+  }
+
+  async findAll(): Promise<Category[]> {
+    return await this.prisma.category.findMany();
+  }
+
+  async findOne(id: number) {
+    return await this.prisma.category.findUnique({ where: {id} });
+  }
+
+  async update(id: number,
+     updateCategoryDto: UpdateCategoryDto) : Promise<Category> {
+    return await this.prisma.category.update({
+      data: {...updateCategoryDto},
+      where: { id },
+    });
+  }
+
+  async remove(id: number) {
+    return await this.prisma.category.delete({ where: { id }});
+  }
+```
+
+> **_Nota_** :bangbang: Todos os métodos que realizarão operações com/no banco de dados precisam ser feitos de forma assíncrona pois estamos utilizando uma _Promise_ para realizar a chamada.
 
 ## Manipulação de Erros
 
