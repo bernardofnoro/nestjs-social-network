@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../../core/auth/guards/jwt-auth.guard';
 
@@ -12,12 +12,6 @@ import { UpdateFollowingDto } from './dto/update-following.dto';
 export class FollowingController {
   constructor(private readonly followingService: FollowingService) {}
 
-  @Post()
-  @UseGuards(JwtAuthGuard)
-  create(@Body() createFollowingDto: CreateFollowingDto) {
-    return this.followingService.create(createFollowingDto);
-  }
-
   @Get()
   findAll() {
     return this.followingService.findAll();
@@ -28,14 +22,24 @@ export class FollowingController {
     return this.followingService.findOne(+id);
   }
 
+  @Post()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  create(@Body() createFollowingDto: CreateFollowingDto) {
+    return this.followingService.create(createFollowingDto);
+  }
+
+  
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateFollowingDto: UpdateFollowingDto) {
     return this.followingService.update(+id, updateFollowingDto);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   remove(@Param('id') id: string) {
     return this.followingService.remove(+id);
   }
