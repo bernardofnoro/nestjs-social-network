@@ -8,8 +8,8 @@ import { Auth } from './entities/auth.entity';
 
 @Injectable()
 export class AuthService {
-  validateUser(userId: string) {
-    return this.prisma.user.findUnique({ where: { username: userId } });
+  validateUser(username : string) {
+    return this.prisma.user.findUnique({ where: { username: username } });
   }
   constructor(
     private prisma:PrismaService,
@@ -33,7 +33,7 @@ export class AuthService {
     }
 
     return {
-      accessToken: this.jwtService.sign({ userId: user.id }),
+      accessToken: this.jwtService.sign({ username: user.id }),
     };
   }
 }
