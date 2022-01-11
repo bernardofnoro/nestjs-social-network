@@ -1,13 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { FollowingService } from './following.service';
 import { CreateFollowingDto } from './dto/create-following.dto';
 import { UpdateFollowingDto } from './dto/update-following.dto';
+import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard';
 
 @Controller('following')
 export class FollowingController {
   constructor(private readonly followingService: FollowingService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   create(@Body() createFollowingDto: CreateFollowingDto) {
     return this.followingService.create(createFollowingDto);
   }

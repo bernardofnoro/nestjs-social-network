@@ -8,12 +8,15 @@ import { Auth } from './entities/auth.entity';
 
 @Injectable()
 export class AuthService {
+  validateUser(userId: string) {
+    return this.prisma.user.findUnique({ where: { username: userId } });
+  }
   constructor(
     private prisma:PrismaService,
     private jwtService:JwtService,
   ){}
 
-
+  
 
   async login(username: string, password: string): Promise<Auth> {
     const user = await this.prisma.user.findUnique({ where: { username: username } });
@@ -34,6 +37,8 @@ export class AuthService {
     };
   }
 }
+
+
 
 
 

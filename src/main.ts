@@ -9,6 +9,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Twitter API')
     .setDescription('Serve Tweets Data')
     .setVersion('1.0')
