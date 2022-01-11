@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
+import { JwtAuthGuard } from '../../core/auth/guards/jwt-auth.guard';
+
 import { FollowerService } from './follower.service';
 import { CreateFollowerDto } from './dto/create-follower.dto';
 import { UpdateFollowerDto } from './dto/update-follower.dto';
-import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('follower')
 @Controller('follower')
@@ -10,6 +13,7 @@ export class FollowerController {
   constructor(private readonly followerService: FollowerService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   create(@Body() createFollowerDto: CreateFollowerDto) {
     return this.followerService.create(createFollowerDto);
   }
@@ -25,11 +29,13 @@ export class FollowerController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   update(@Param('id') id: string, @Body() updateFollowerDto: UpdateFollowerDto) {
     return this.followerService.update(+id, updateFollowerDto);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.followerService.remove(+id);
   }
