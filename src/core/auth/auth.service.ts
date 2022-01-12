@@ -3,7 +3,7 @@ import { PrismaService } from 'src/shared/database/database.service';
 import { JwtService } from '@nestjs/jwt';
 import { Auth } from './entities/auth.entity';
 import * as bcrypt from 'bcrypt'
-import { CreateUserDto } from 'src/app/user/dto/create-user.dto';
+
 
 @Injectable()
 export class AuthService {
