@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { PrismaService } from 'src/shared/database/database.service';
 import { JwtService } from '@nestjs/jwt';
 import { Auth } from './entities/auth.entity';
+import * as bcrypt from 'bcrypt'
 
 
 @Injectable()
@@ -15,20 +16,19 @@ export class AuthService {
       throw new NotFoundException(`No user found for username: ${username}`);
     }
 
-
-    const passwordValid = user.password === password;
+    const passwordValid = await bcrypt.compare( password , user.password );
   
- if (!passwordValid) {
-      throw new UnauthorizedException('Invalid password');
+ if (!passwordValid) { 
+    throw new UnauthorizedException('Invalid password');
     }
 
     return {
-      accessToken: this.jwtService.sign({ username: user.id }),
+      accessToken: this.jwtService.sign({ userId: user.id }),
     };
   }
 
-  validateUser(userId: string) {
-    return this.prisma.user.findUnique({ where: { username: userId } });
+  validateUser(userId: any) {
+    return this.prisma.user.findUnique({ where: { id: userId } });
   }
 }
 
