@@ -805,6 +805,73 @@ Desta forma, nos permitindo implementar as operações que faremos com e/no banc
 
 > **_Nota_** :bangbang: Todos os métodos que realizarão operações com/no banco de dados precisam ser feitos de forma assíncrona pois estamos utilizando uma _Promise_ para realizar a chamada.
 
+Com as nossas operações CRUD implementadas, podemos implementar as rotas em `category.controller.ts`:
+
+```typescript
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
+import { JwtAuthGuard } from '../../core/auth/guards/jwt-auth.guard';
+
+import { CategoryService } from './category.service';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
+
+@ApiTags('category')
+@Controller('category')
+export class CategoryController {
+  constructor(private readonly categoryService: CategoryService) { }
+
+  @Get()
+  findAll() {
+    return this.categoryService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.categoryService.findOne(+id);
+  }
+
+  @Post()
+  create(@Body() createCategoryDto: CreateCategoryDto) {
+    return this.categoryService.create(createCategoryDto);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
+    return this.categoryService.update(+id, updateCategoryDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.categoryService.remove(+id);
+  }
+}
+
+```
+
+**`GET /category`** - Busca por todas as categorias cadastradas no banco de dados.
+
+**`GET /category/:id`** - Busca por uma categoria pelo ID.
+
+**`POST /category`** - Cria uma nova categoria no banco de dados:
+
+```json
+{
+    "name": "Pringles",
+}
+```
+
+**`PATCH /category/:id`** - Atualiza uma nova categoria no banco de dados:
+
+```json
+{
+    "name": "Donuts",
+}
+```
+
+**`DELETE /category/:id`** - Deleta a categoria pelo ID.
+
 ## Manipulação de Erros
 
 
